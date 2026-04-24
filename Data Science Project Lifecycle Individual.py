@@ -10,8 +10,7 @@ st.set_page_config(page_title="Sea Level Dashboard", layout="wide")
 # -----------------------------
 # LOAD DATA
 # -----------------------------
-df = pd.read_csv("cleaned_dataset.csv")
-
+df = pd.read_excel("Data Science Project Lifecycle.xlsx")
 # -----------------------------
 # TITLE
 # -----------------------------
