@@ -3,210 +3,269 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-st.set_page_config(layout="wide")
+# ─────────────────────────────
+# PAGE CONFIG
+# ─────────────────────────────
+st.set_page_config(page_title="Sea Level Dashboard", layout="wide")
 
-# ===============================
-# LOAD DATA
-# ===============================
-@st.cache_data
-def load_data():
-    df = pd.read_excel("Data Science Project Lifecycle.xlsx")
-    df.columns = df.columns.str.strip()
-    return df
+# ─────────────────────────────
+# CUSTOM CSS (PREMIUM LOOK)
+# ─────────────────────────────
+st.markdown("""
+<style>
+.main {background-color: #f5f7fa;}
+.block-container {padding-top: 2rem;}
 
-df = load_data()
+.kpi-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+    text-align: center;
+}
 
-# ===============================
-# CLEANING (FIX YOUR OLD BUGS HERE)
-# ===============================
+.kpi-title {font-size: 14px; color: gray;}
+.kpi-value {font-size: 28px; font-weight: bold;}
+.kpi-sub {font-size: 13px; color: #555;}
+</style>
+""", unsafe_allow_html=True)
 
-# Normalize Scenario names (VERY IMPORTANT)
-df["Scenario"] = df["Scenario"].str.replace(" ", "")
-# "1 meter" → "1meter"
-
-# Sort scenarios properly
-scenario_order = ["1meter","2meter","3meter","4meter","5meter"]
-
-df["Scenario"] = pd.Categorical(df["Scenario"], categories=scenario_order, ordered=True)
-
-# ===============================
-# SIDEBAR
-# ===============================
-st.sidebar.title("🌊 Filters")
-
-selected_scenario = st.sidebar.selectbox(
-    "Select Scenario",
-    scenario_order
-)
-
-selected_indicator = st.sidebar.selectbox(
-    "Select Indicator",
-    df["Indicator"].unique()
-)
-
-# ===============================
+# ─────────────────────────────
 # TITLE
-# ===============================
+# ─────────────────────────────
 st.title("🌊 Sea-Level Rise Impact Dashboard")
+st.caption("Interactive analysis of global exposure across sea-level scenarios")
+st.markdown("---")
 
-# ===============================
-# KPI SECTION (USING IMPACT)
-# ===============================
-st.subheader(f"📊 Global Impact — {selected_scenario}")
+# ─────────────────────────────
+# LOAD DATA
+# ─────────────────────────────
+df = pd.read_excel("Data Science Project Lifecycle.xlsx")
 
-kpi_df = df[df["Scenario"] == selected_scenario]
+# CLEAN DATA
+df['Indicator'] = df['Indicator'].str.strip().str.title()
+df['Scenario'] = df['Scenario'].str.strip().str.lower()
 
-col1, col2, col3 = st.columns(3)
+# ─────────────────────────────
+# FILTERS
+# ─────────────────────────────
+col1, col2 = st.columns(2)
 
-def get_total(ind):
-    return kpi_df[kpi_df["Indicator"] == ind]["Impact"].sum()
+with col1:
+    scenario = st.selectbox("🌊 Select Scenario", sorted(df['Scenario'].unique()))
 
-col1.metric("🌍 Land at Risk", f"{get_total('Land'):,.0f}")
-col2.metric("👥 Population Exposed", f"{get_total('Population'):,.0f}")
-col3.metric("💰 GDP Exposed", f"{get_total('GDP'):,.0f}")
+with col2:
+    indicator = st.selectbox("📊 Select Indicator", df['Indicator'].unique())
+
+filtered_df = df[df['Scenario'] == scenario]
+
+# ─────────────────────────────
+# KPI FUNCTION
+# ─────────────────────────────
+def get_kpi(name):
+    data = filtered_df[filtered_df['Indicator'] == name]
+    impact = data['Impact'].sum()
+    total = data['Total'].sum()
+    pct = (impact / total * 100) if total > 0 else 0
+    return impact, pct
+
+land, land_pct = get_kpi("Land")
+pop, pop_pct = get_kpi("Population")
+gdp, gdp_pct = get_kpi("Gdp")
+
+# ─────────────────────────────
+# KPI CARDS (PREMIUM STYLE)
+# ─────────────────────────────
+c1, c2, c3 = st.columns(3)
+
+with c1:
+    st.markdown(f"""
+    <div class="kpi-card">
+        <div class="kpi-title">🌍 Land at Risk</div>
+        <div class="kpi-value">{land:,.0f} km²</div>
+        <div class="kpi-sub">{land_pct:.2f}% of global land</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with c2:
+    st.markdown(f"""
+    <div class="kpi-card">
+        <div class="kpi-title">👥 Population Exposed</div>
+        <div class="kpi-value">{pop:,.0f}</div>
+        <div class="kpi-sub">{pop_pct:.2f}% of global population</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+with c3:
+    st.markdown(f"""
+    <div class="kpi-card">
+        <div class="kpi-title">💰 GDP Exposed</div>
+        <div class="kpi-value">${gdp:,.0f}</div>
+        <div class="kpi-sub">{gdp_pct:.2f}% of global GDP</div>
+    </div>
+    """, unsafe_allow_html=True)
 
 st.markdown("---")
 
-# ===============================
-# GLOBAL TREND (PERCENTAGE)
-# ===============================
+# ─────────────────────────────
+# GLOBAL TREND
+# ─────────────────────────────
 st.subheader("📈 Global Trend (% Impact)")
 
-trend_df = df.groupby(["Scenario","Indicator"])["Percentage"].mean().reset_index()
+trend = df.groupby(['Scenario','Indicator'])['Percentage'].mean().reset_index()
 
-fig_line = px.line(
-    trend_df,
-    x="Scenario",
-    y="Percentage",
-    color="Indicator",
-    markers=True
+fig1 = px.line(trend, x='Scenario', y='Percentage', color='Indicator', markers=True)
+
+fig1.update_layout(
+    xaxis=dict(showgrid=True),
+    yaxis=dict(showgrid=True)
 )
 
-st.plotly_chart(fig_line, use_container_width=True)
+st.plotly_chart(fig1, use_container_width=True)
 
-# ===============================
-# REGIONAL BREAKDOWN
-# ===============================
-st.subheader("🌍 Continent Breakdown")
+st.markdown("---")
 
-region_df = df[
-    (df["Indicator"] == selected_indicator)
-]
+# ─────────────────────────────
+# CONTINENT BREAKDOWN
+# ─────────────────────────────
+st.subheader("🌍 Continent Breakdown (Land %)")
 
-region_group = region_df.groupby(["Continent","Scenario"])["Impact"].sum().reset_index()
+land_df = df[df['Indicator'] == 'Land']
 
-fig_region = px.bar(
-    region_group,
-    x="Continent",
-    y="Impact",
-    color="Scenario",
-    barmode="group"
+fig2 = px.bar(
+    land_df,
+    x='Continent',
+    y='Percentage',
+    color='Scenario',
+    barmode='group'
 )
 
-st.plotly_chart(fig_region, use_container_width=True)
+st.plotly_chart(fig2, use_container_width=True)
 
-# ===============================
-# TOP COUNTRIES
-# ===============================
-st.subheader(f"🏆 Top 15 Countries — {selected_indicator}")
+st.markdown("---")
+
+# ─────────────────────────────
+# TOP COUNTRIES (DYNAMIC)
+# ─────────────────────────────
+st.subheader("🏆 Top 15 Countries")
 
 top_df = df[
-    (df["Scenario"] == selected_scenario) &
-    (df["Indicator"] == selected_indicator)
-]
+    (df['Scenario'] == scenario) &
+    (df['Indicator'] == indicator)
+].nlargest(15, 'Percentage')
 
-top_df = top_df.sort_values(by="Percentage", ascending=False).head(15)
-
-fig_top = px.bar(
-    top_df,
-    x="Percentage",
-    y="Country",
-    orientation="h",
-    color="Percentage",
-    color_continuous_scale="Reds"
+fig3 = px.bar(
+    top_df.sort_values('Percentage'),
+    x='Percentage',
+    y='Country',
+    orientation='h',
+    color='Percentage',
+    color_continuous_scale='Blues'
 )
 
-st.plotly_chart(fig_top, use_container_width=True)
+st.plotly_chart(fig3, use_container_width=True)
 
-# ===============================
-# HEATMAP (FIXED PERFECTLY)
-# ===============================
+st.markdown("---")
+
+# ─────────────────────────────
+# HEATMAP (FIXED)
+# ─────────────────────────────
 st.subheader("🔥 Vulnerability Heatmap")
 
-heat_df = df[df["Indicator"] == selected_indicator]
+heat_df = df[df['Indicator'] == indicator]
 
-heat_pivot = heat_df.pivot_table(
-    index="Country",
-    columns="Scenario",
-    values="Percentage"
+top_countries = (
+    heat_df.groupby('Country')['Percentage']
+    .max()
+    .nlargest(15)
+    .index
 )
 
-# Top 15 based on selected scenario
-heat_pivot = heat_pivot.sort_values(by=selected_scenario, ascending=False).head(15)
+heat_df = heat_df[heat_df['Country'].isin(top_countries)]
 
-fig_heat = px.imshow(
-    heat_pivot,
-    text_auto=True,
-    aspect="auto",
-    color_continuous_scale="Reds"
+pivot = heat_df.pivot_table(
+    index='Country',
+    columns='Scenario',
+    values='Percentage'
 )
 
-st.plotly_chart(fig_heat, use_container_width=True)
+fig4 = px.imshow(pivot, text_auto=True, color_continuous_scale="RdYlBu_r")
 
-# ===============================
-# DUAL AXIS (POP vs GDP)
-# ===============================
+st.plotly_chart(fig4, use_container_width=True)
+
+st.markdown("---")
+
+# ─────────────────────────────
+# POP vs GDP
+# ─────────────────────────────
 st.subheader("📊 Population vs GDP")
 
-pop_df = df[df["Indicator"] == "Population"].groupby("Scenario")["Impact"].sum()
-gdp_df = df[df["Indicator"] == "GDP"].groupby("Scenario")["Impact"].sum()
+pop_df = df[df['Indicator'] == 'Population'].groupby('Scenario')['Impact'].sum().reset_index()
+gdp_df = df[df['Indicator'] == 'Gdp'].groupby('Scenario')['Impact'].sum().reset_index()
 
-fig_dual = go.Figure()
+fig5 = go.Figure()
 
-fig_dual.add_trace(go.Scatter(
-    x=pop_df.index,
-    y=pop_df.values,
-    name="Population",
-    mode="lines+markers"
+fig5.add_trace(go.Scatter(
+    x=pop_df['Scenario'],
+    y=pop_df['Impact']/1e6,
+    name="Population (Millions)"
 ))
 
-fig_dual.add_trace(go.Scatter(
-    x=gdp_df.index,
-    y=gdp_df.values,
-    name="GDP",
-    mode="lines+markers",
-    yaxis="y2"
+fig5.add_trace(go.Scatter(
+    x=gdp_df['Scenario'],
+    y=gdp_df['Impact']/1e3,
+    name="GDP (Billions)"
 ))
 
-fig_dual.update_layout(
-    yaxis=dict(title="Population"),
-    yaxis2=dict(title="GDP", overlaying="y", side="right")
+fig5.update_layout(
+    yaxis_title="Population (Millions) / GDP (Billions)"
 )
 
-st.plotly_chart(fig_dual, use_container_width=True)
+st.plotly_chart(fig5, use_container_width=True)
 
-# ===============================
-# RADAR CHART
-# ===============================
-st.subheader("🧭 Impact Profile")
+st.markdown("---")
 
-radar_df = df[df["Scenario"] == selected_scenario]
+# ─────────────────────────────
+# RADAR
+# ─────────────────────────────
+st.subheader("🕸️ Radar (% Impact)")
 
-radar_group = radar_df.groupby("Indicator")["Percentage"].mean().reset_index()
+radar_df = df[df['Scenario'] == scenario]
 
-fig_radar = go.Figure()
+radar = radar_df.groupby('Indicator')['Percentage'].mean().reset_index()
 
-fig_radar.add_trace(go.Scatterpolar(
-    r=radar_group["Percentage"],
-    theta=radar_group["Indicator"],
+fig6 = go.Figure()
+
+fig6.add_trace(go.Scatterpolar(
+    r=radar['Percentage'],
+    theta=radar['Indicator'],
     fill='toself'
 ))
 
-st.plotly_chart(fig_radar, use_container_width=True)
+fig6.update_layout(
+    polar=dict(radialaxis=dict(title="Percentage (%)"))
+)
 
-# ===============================
+st.plotly_chart(fig6, use_container_width=True)
+
+st.markdown("---")
+
+# ─────────────────────────────
 # TABLE
-# ===============================
-st.subheader("📋 Top Countries Table")
+# ─────────────────────────────
+st.subheader("📋 Top 15 Most Vulnerable Countries")
 
-st.dataframe(top_df)
+land_df = df[df['Indicator'] == 'Land']
+
+t1 = land_df[land_df['Scenario'] == '1 meter'][['Country','Percentage']]
+t3 = land_df[land_df['Scenario'] == '3 meter'][['Country','Percentage']]
+t5 = land_df[land_df['Scenario'] == '5 meter'][['Country','Percentage']]
+
+merged = t1.merge(t3, on='Country', suffixes=(' 1m',' 3m'))
+merged = merged.merge(t5, on='Country')
+
+merged.columns = ['Country','Land % at +1m','Land % at +3m','Land % at +5m']
+
+top15 = merged.sort_values('Land % at +5m', ascending=False).head(15)
+
+st.dataframe(top15, use_container_width=True)
