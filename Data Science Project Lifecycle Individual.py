@@ -331,9 +331,12 @@ fig6.add_trace(go.Scatterpolar(
     fill='toself'
 ))
 
-fig6.update_layout(
-    polar=dict(radialaxis=dict(title="Exposure (%)")),
-    showlegend=False
+fig6.update_layout(polar=dict(
+        radialaxis=dict(
+            title="Exposure (%)",
+            range=[0, radar['Percentage'].max() * 1.2]  # 👈 keeps spacing clean
+        )
+    )
 )
 
 st.plotly_chart(fig6, use_container_width=True)
