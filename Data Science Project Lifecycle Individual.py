@@ -86,7 +86,7 @@ with c1:
     st.markdown(f"""
     <div class="kpi-card">
         <div class="kpi-title">🌍 Land at Risk</div>
-        <div class="kpi-value">{land:,.0f} km²</div>
+        <div class="kpi-value">{land/1_000:.0f}k km²</div>
         <div class="kpi-sub">{land_pct:.2f}% of global land</div>
     </div>
     """, unsafe_allow_html=True)
