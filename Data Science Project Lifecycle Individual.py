@@ -38,7 +38,12 @@ left, center, right = st.columns([1, 3, 1])
 
 with center:
     st.title("🌊 Sea-Level Rise Impact Dashboard")
-    st.caption("Interactive analysis of global exposure across sea-level scenarios")
+    st.markdown(
+        "<p style='text-align:center; color:gray; font-size:14px;'>"
+        "Interactive analysis of global exposure across sea-level scenarios"
+        "</p>",
+        unsafe_allow_html=True
+    )
 
 # ─────────────────────────────
 # LOAD DATA
