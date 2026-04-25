@@ -185,7 +185,7 @@ st.markdown("---")
 # HEATMAP (FIXED)
 # ─────────────────────────────
 st.subheader("Top Country Vulnerability Heatmap")
-st.caption("Top 15 most affected countries showing exposure variations across sea-level rise scenarios (1–5m) for the selected indicator"")
+st.caption("Top 15 most affected countries showing exposure variations across sea-level rise scenarios (1–5m) for the selected indicator")
 
 heat_df = df[df['Indicator'] == indicator]
 
