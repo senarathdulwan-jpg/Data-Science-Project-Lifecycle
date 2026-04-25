@@ -332,7 +332,7 @@ fig6.add_trace(go.Scatterpolar(
 fig6.update_layout(polar=dict(
         radialaxis=dict(
             title="Exposure (%)",
-            range=[0, radar['Percentage'].max() * 1.2]  # 👈 keeps spacing clean
+            range=[0, overall['Percentage'].max() * 1.2]  # 👈 keeps spacing clean
         )
     )
 )
