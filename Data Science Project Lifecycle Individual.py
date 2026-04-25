@@ -325,8 +325,8 @@ radar = radar_df.groupby('Indicator').apply(
 fig6 = go.Figure()
 
 fig6.add_trace(go.Scatterpolar(
-    r=radar['Percentage'],
-    theta=radar['Indicator'],
+    r=list(radar['Percentage']) + [radar['Percentage'][0]],
+    theta=list(radar['Indicator']) + [radar['Indicator'][0]],
     fill='toself'
 ))
 
