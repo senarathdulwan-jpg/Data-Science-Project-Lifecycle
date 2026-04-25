@@ -213,34 +213,63 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 # ─────────────────────────────
-# POP vs GDP
+# POP and GPD
 # ─────────────────────────────
-st.subheader("📊 Population vs GDP")
+st.subheader("Global Absolute Impact Growth — Population & GDP")
+st.caption("Cumulative increase in people and GDP value exposed as sea levels rise")
 
-pop_df = df[df['Indicator'] == 'Population'].groupby('Scenario')['Impact'].sum().reset_index()
-gdp_df = df[df['Indicator'] == 'Gdp'].groupby('Scenario')['Impact'].sum().reset_index()
+import plotly.graph_objects as go
 
-fig5 = go.Figure()
+pop_df = df[df['Indicator'] == 'Population']
+gdp_df = df[df['Indicator'] == 'Gdp']
 
-fig5.add_trace(go.Scatter(
-    x=pop_df['Scenario'],
-    y=pop_df['Impact']/1e6,
-    name="Population (Millions)"
+pop_data = pop_df.groupby('Scenario')['Impact'].sum().reindex(scenario_order)
+gdp_data = gdp_df.groupby('Scenario')['Impact'].sum().reindex(scenario_order)
+
+fig = go.Figure()
+
+# Population line
+fig.add_trace(go.Scatter(
+    x=scenario_order,
+    y=pop_data.values / 1_000_000,  # convert to millions
+    mode='lines+markers',
+    name='Population (Millions)',
+    line=dict(width=3)
 ))
 
-fig5.add_trace(go.Scatter(
-    x=gdp_df['Scenario'],
-    y=gdp_df['Impact']/1e3,
-    name="GDP (Billions)"
+# GDP line
+fig.add_trace(go.Scatter(
+    x=scenario_order,
+    y=gdp_data.values / 1_000,  # convert to billions
+    mode='lines+markers',
+    name='GDP (Billions)',
+    yaxis='y2',
+    line=dict(width=3, dash='dot')
 ))
 
-fig5.update_layout(
-    yaxis_title="Population (Millions) / GDP (Billions)"
+fig.update_layout(
+    height=500,
+    template='plotly_white',
+    xaxis_title="Scenario",
+    
+    # LEFT AXIS (Population)
+    yaxis=dict(
+        title="Population (Millions)",
+        tickmode='linear',
+        dtick=50  # 0, 50, 100, 150...
+    ),
+
+    # RIGHT AXIS (GDP)
+    yaxis2=dict(
+        title="GDP (Billions)",
+        overlaying='y',
+        side='right'
+    ),
+
+    legend=dict(orientation='h', y=-0.2)
 )
 
-st.plotly_chart(fig5, use_container_width=True)
-
-st.markdown("---")
+st.plotly_chart(fig, use_container_width=True)
 
 # ─────────────────────────────
 # RADAR
