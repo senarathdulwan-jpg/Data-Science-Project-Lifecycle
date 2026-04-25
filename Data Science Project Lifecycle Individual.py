@@ -252,7 +252,7 @@ fig.add_trace(go.Scatter(
     mode='lines+markers',
     name='Population (Millions)',
     line=dict(width=3, color="royalblue"),
-    marker=dict(size=8, color="royalblue)"
+    marker=dict(size=8, color="royalblue")
 ))
 
 # GDP line
@@ -263,7 +263,7 @@ fig.add_trace(go.Scatter(
     name='GDP (Billions)',
     yaxis='y2',
     line=dict(width=3, dash='dot',color="tomato"),
-    marker=dict(size=8, color="tomato"
+    marker=dict(size=8, color="tomato")
 ))
 
 fig.update_layout(
@@ -275,7 +275,7 @@ fig.update_layout(
     yaxis=dict(
         title="Population (Millions)",
         tickmode='linear',
-        dtick=50
+        dtick=50,
         showgrid=True
     ),
 
@@ -283,10 +283,9 @@ fig.update_layout(
     yaxis2=dict(
         title="GDP (Billions)",
         overlaying='y',
-        side='right'
+        side='right',
         showgrid=False,
-        zeroline=False
-    ),
+        zeroline=False),
 
     legend=dict(orientation='h', y=-0.2)
 )
