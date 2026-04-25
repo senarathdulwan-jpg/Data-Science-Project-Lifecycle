@@ -149,8 +149,7 @@ fig2 = px.bar(
 )
 
 
-fig2.update_layout(yaxis_title="Land Exposed (%)",yaxis=dict(showgrid=False),
-    xaxis=dict(showgrid=False))
+fig2.update_layout(yaxis_title="Land Exposed (%)")
 
 st.plotly_chart(fig2, use_container_width=True)
 
