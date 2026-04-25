@@ -172,7 +172,7 @@ fig3 = px.bar(
     y='Country',
     orientation='h',
     color='Percentage',
-    color_continuous_scale='Blues_r'
+    color_continuous_scale='Viridis'
 )
 fig3.update_layout(xaxis_title="Exposure (%)")
 
