@@ -135,7 +135,8 @@ st.markdown("---")
 # ─────────────────────────────
 # CONTINENT BREAKDOWN
 # ─────────────────────────────
-st.subheader("🌍 Continent Breakdown (Land %)")
+st.subheader("🌍 Regional Land Exposure by Scenario(Land %)")
+st.caption("Percentage of land at risk per region across sea-level rise scenarios")
 
 land_df = df[df['Indicator'] == 'Land']
 
@@ -146,6 +147,8 @@ fig2 = px.bar(
     color='Scenario',
     barmode='group'
 )
+fig2.update_traces(marker_line_width=0)
+fig2.update_layout(yaxis_title="Land Exposed (%)")
 
 st.plotly_chart(fig2, use_container_width=True)
 
