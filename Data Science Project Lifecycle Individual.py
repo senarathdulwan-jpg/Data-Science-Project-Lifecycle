@@ -119,7 +119,9 @@ st.caption("How each indicator's exposure grows from +1m to +5m sea-level rise (
 
 trend = df.groupby(['Scenario','Indicator'])['Percentage'].mean().reset_index()
 
-fig1 = px.line(trend, x='Scenario', y='Global Exposure(%)', color='Indicator', markers=True)
+fig1 = px.line(trend, x='Scenario', y='Percentage', color='Indicator', markers=True)
+
+fig1.update_layout(yaxis_title="Global Exposure (%)")
 
 fig1.update_layout(
     xaxis=dict(showgrid=True),
