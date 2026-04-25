@@ -42,6 +42,7 @@ st.markdown("""
         </p>
     </div>
 """, unsafe_allow_html=True)
+left_panel, main_panel = st.columns([1, 4])
 st.write("")   
 
 
@@ -70,22 +71,18 @@ df['Scenario'] = pd.Categorical(
 # FILTERS
 # ─────────────────────────────
 
-left_panel, main_area = st.columns([1, 4])
-
 with left_panel:
-    st.markdown("### Filters")
+    st.markdown("### 🎛️ Filters")
+    st.markdown("---")
 
-    scenario = st.selectbox("🌊 Select Scenario", scenario_order)
-    indicator = st.selectbox("📊 Select Indicator", df['Indicator'].unique())
-
-with main_area:
-    st.write("")  # keeps layout stable
-st.write("")   
+    scenario = st.selectbox("🌊 Scenario", scenario_order)
+    indicator = st.selectbox("📊 Indicator", df['Indicator'].unique())
 
 
 # ─────────────────────────────
 # KPI FUNCTION
 # ─────────────────────────────
+with main_panel:
 def get_kpi(name):
     data = filtered_df[filtered_df['Indicator'] == name]
     impact = data['Impact'].sum()
