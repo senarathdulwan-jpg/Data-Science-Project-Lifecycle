@@ -317,7 +317,10 @@ st.subheader("🕸️ Radar (% Impact)")
 
 radar_df = df[df['Scenario'] == scenario]
 
-radar = radar_df.groupby('Indicator')['Percentage'].mean().reset_index()
+
+radar = radar_df.groupby('Indicator').apply(
+    lambda x: x['Impact'].sum() / x['Total'].sum() * 100
+).reset_index(name='Percentage')
 
 fig6 = go.Figure()
 
