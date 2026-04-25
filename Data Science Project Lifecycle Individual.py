@@ -71,18 +71,17 @@ df['Scenario'] = pd.Categorical(
 # FILTERS
 # ─────────────────────────────
 
-with left_panel:
-    st.markdown("### 🎛️ Filters")
-    st.markdown("---")
+with st.sidebar:
+    st.markdown("## 🎛️ Filters")
 
-    scenario = st.selectbox("🌊 Scenario", scenario_order)
-    indicator = st.selectbox("📊 Indicator", df['Indicator'].unique())
+    scenario = st.selectbox("🌊 Select Scenario", scenario_order)
+    indicator = st.selectbox("📊 Select Indicator", df['Indicator'].unique())
 
 
 # ─────────────────────────────
 # KPI FUNCTION
 # ─────────────────────────────
-with main_panel:
+
 def get_kpi(name):
     data = filtered_df[filtered_df['Indicator'] == name]
     impact = data['Impact'].sum()
