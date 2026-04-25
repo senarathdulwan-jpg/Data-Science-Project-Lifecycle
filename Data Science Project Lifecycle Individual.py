@@ -184,14 +184,15 @@ st.markdown("---")
 # ─────────────────────────────
 # HEATMAP (FIXED)
 # ─────────────────────────────
-st.subheader("🔥 Vulnerability Heatmap (Top 15 Across All Scenarios)")
+st.subheader("Top Country Vulnerability Heatmap")
+st.caption("Top 15 most affected countries showing exposure variations across sea-level rise scenarios (1–5m) for the selected indicator"")
 
 heat_df = df[df['Indicator'] == indicator]
 
 # ✅ Get top 15 countries based on MAX exposure across ALL scenarios
 top_countries = (
     heat_df.groupby('Country')['Percentage']
-    .max()                      # you can also use .mean() if needed
+    .max()                
     .nlargest(15)
     .index
 )
@@ -205,6 +206,8 @@ pivot = heat_df.pivot_table(
     columns='Scenario',
     values='Percentage'
 )
+scenario_order = ['1 meter', '2 meter', '3 meter', '4 meter', '5 meter']
+pivot = pivot.reindex(columns=scenario_order)
 
 # Sort by highest scenario (5 meter usually)
 pivot = pivot.sort_values(by=pivot.columns[-1], ascending=False)
@@ -216,6 +219,8 @@ fig = px.imshow(
     aspect="auto",
     color_continuous_scale="RdYlBu_r"
 )
+
+fig.update_coloraxes(colorbar_title="Impact (%)")
 
 fig.update_layout(
     height=600
