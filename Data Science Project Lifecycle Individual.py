@@ -145,7 +145,7 @@ fig2 = px.bar(
     x='Continent',
     y='Percentage',
     color='Scenario',
-    barmode='group'
+    barmode='relative'
 )
 fig2.update_traces(opacity=1)
 fig2.update_layout(yaxis_title="Land Exposed (%)",bargroupgap=0)
