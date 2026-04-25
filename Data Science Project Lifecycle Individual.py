@@ -318,20 +318,22 @@ st.subheader("🕸️ Radar (% Impact)")
 radar_df = df[df['Scenario'] == scenario]
 
 
-radar = radar_df.groupby('Indicator').apply(
+# Calculate global exposure across ALL scenarios
+overall = df.groupby('Indicator').apply(
     lambda x: x['Impact'].sum() / x['Total'].sum() * 100
 ).reset_index(name='Percentage')
 
 fig6 = go.Figure()
 
 fig6.add_trace(go.Scatterpolar(
-    r=list(radar['Percentage']) + [radar['Percentage'][0]],
-    theta=list(radar['Indicator']) + [radar['Indicator'][0]],
+    r=list(overall['Percentage']) + [overall['Percentage'][0]],
+    theta=list(overall['Indicator']) + [overall['Indicator'][0]],
     fill='toself'
 ))
 
 fig6.update_layout(
-    polar=dict(radialaxis=dict(title="Percentage (%)"))
+    polar=dict(radialaxis=dict(title="Exposure (%)")),
+    showlegend=False
 )
 
 st.plotly_chart(fig6, use_container_width=True)
