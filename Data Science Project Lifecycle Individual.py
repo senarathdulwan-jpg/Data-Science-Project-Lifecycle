@@ -82,16 +82,16 @@ with st.sidebar:
 # KPI FUNCTION
 # ─────────────────────────────
 
-def get_kpi(name):
-    data = filtered_df[filtered_df['Indicator'] == name]
+def get_kpi(df_subset, name):
+    data = df_subset[df_subset['Indicator'] == name]
     impact = data['Impact'].sum()
     total = data['Total'].sum()
     pct = (impact / total * 100) if total > 0 else 0
     return impact, pct
 
-land, land_pct = get_kpi("Land")
-pop, pop_pct = get_kpi("Population")
-gdp, gdp_pct = get_kpi("Gdp")
+land, land_pct = get_kpi(filtered_df, "Land")
+pop, pop_pct = get_kpi(filtered_df, "Population")
+gdp, gdp_pct = get_kpi(filtered_df, "Gdp")
 
 # ─────────────────────────────
 # KPI CARDS (PREMIUM STYLE)
