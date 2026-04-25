@@ -78,6 +78,8 @@ with col2:
     indicator = st.selectbox("📊 Select Indicator", df['Indicator'].unique()) 
     
 filtered_df = df[df['Scenario'] == scenario]
+st.write("")   
+
 
 # ─────────────────────────────
 # KPI FUNCTION
