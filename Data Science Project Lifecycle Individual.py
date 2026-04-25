@@ -315,8 +315,6 @@ st.plotly_chart(fig, use_container_width=True)
 # ─────────────────────────────
 st.subheader("🕸️ Radar (% Impact)")
 
-radar_df = df[df['Scenario'] == scenario]
-
 
 # Calculate global exposure across ALL scenarios
 overall = df.groupby('Indicator').apply(
