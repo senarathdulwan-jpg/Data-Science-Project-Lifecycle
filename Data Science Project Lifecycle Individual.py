@@ -220,6 +220,8 @@ st.caption("Cumulative increase in people and GDP value exposed as sea levels ri
 
 import plotly.graph_objects as go
 
+scenario_order = ['1 meter', '2 meter', '3 meter', '4 meter', '5 meter']
+
 pop_df = df[df['Indicator'] == 'Population']
 gdp_df = df[df['Indicator'] == 'Gdp']
 
