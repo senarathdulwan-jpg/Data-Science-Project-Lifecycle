@@ -148,7 +148,7 @@ fig2 = px.bar(
     barmode='stack'
 )
 fig2.update_traces(opacity=1)
-fig2.update_layout(yaxis_title="Land Exposed (%)")
+fig2.update_layout(yaxis_title="Land Exposed (%)",bargap=0.2,bargroupgap=0.0)
 
 st.plotly_chart(fig2, use_container_width=True)
 
