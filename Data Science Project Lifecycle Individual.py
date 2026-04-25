@@ -297,7 +297,7 @@ fig.add_annotation(
     y=-0.2,
     xref="paper",
     yref="paper",
-    aligh="left"
+    align="left"
 )
 
 st.plotly_chart(fig, use_container_width=True)
