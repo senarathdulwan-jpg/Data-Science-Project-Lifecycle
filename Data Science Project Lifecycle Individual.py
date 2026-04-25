@@ -42,9 +42,13 @@ st.markdown("---")
 # ─────────────────────────────
 df = pd.read_excel("Data Science Project Lifecycle.xlsx")
 
-# CLEAN DATA
+# CLEAN COLUMN NAMES (CRITICAL FIX)
+df.columns = df.columns.str.strip()
+
+# CLEAN VALUES
 df['Indicator'] = df['Indicator'].str.strip().str.title()
 df['Scenario'] = df['Scenario'].str.strip().str.lower()
+df['Continent'] = df['Continent'].str.strip()
 
 # ─────────────────────────────
 # FILTERS
