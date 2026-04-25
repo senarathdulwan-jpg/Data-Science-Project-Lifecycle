@@ -158,7 +158,8 @@ st.markdown("---")
 # ─────────────────────────────
 # TOP COUNTRIES (DYNAMIC)
 # ─────────────────────────────
-st.subheader("🏆 Top 15 Countries")
+st.subheader("Country-Level Vulnerability Ranking")
+st.caption("Top 15 countries ranked by percentage of impact for the selected indicator and sea-level rise scenario")
 
 top_df = df[
     (df['Scenario'] == scenario) &
@@ -173,6 +174,7 @@ fig3 = px.bar(
     color='Percentage',
     color_continuous_scale='Blues'
 )
+fig3.update_layout(yaxis_title="Exposure (%)")
 
 st.plotly_chart(fig3, use_container_width=True)
 
