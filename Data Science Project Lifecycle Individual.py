@@ -95,7 +95,7 @@ with c2:
     st.markdown(f"""
     <div class="kpi-card">
         <div class="kpi-title">👥 Population Exposed</div>
-        <div class="kpi-value">{pop:,.0f}</div>
+        <div class="kpi-value">{pop/1_000_000:.1f}M</div>
         <div class="kpi-sub">{pop_pct:.2f}% of global population</div>
     </div>
     """, unsafe_allow_html=True)
