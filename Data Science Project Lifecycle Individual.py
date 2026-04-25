@@ -50,13 +50,21 @@ df['Indicator'] = df['Indicator'].str.strip().str.title()
 df['Scenario'] = df['Scenario'].str.strip().str.lower()
 df['Continent'] = df['Continent'].str.strip()
 
+scenario_order = ['1 meter','2 meter','3 meter','4 meter','5 meter']
+
+df['Scenario'] = pd.Categorical(
+    df['Scenario'],
+    categories=scenario_order,
+    ordered=True
+)
+
 # ─────────────────────────────
 # FILTERS
 # ─────────────────────────────
 col1, col2 = st.columns(2)
 
 with col1:
-    scenario = st.selectbox("🌊 Select Scenario", sorted(df['Scenario'].unique()))
+    scenario = st.selectbox("🌊 Select Scenario", scenario_order)
 
 with col2:
     indicator = st.selectbox("📊 Select Indicator", df['Indicator'].unique())
@@ -117,7 +125,9 @@ st.markdown("---")
 st.subheader("Global Percentage Impact by Scenario — All Indicators")
 st.caption("How each indicator's exposure grows from +1m to +5m sea-level rise (% of global total)")
 
-trend = df.groupby(['Scenario','Indicator'])['Percentage'].mean().reset_index()
+trend = df.groupby(['Scenario','Indicator']).apply(
+    lambda x: x['Impact'].sum() / x['Total'].sum() * 100
+).reset_index(name='Percentage')
 
 fig1 = px.line(trend, x='Scenario', y='Percentage', color='Indicator', markers=True)
 
@@ -125,6 +135,16 @@ fig1.update_layout(yaxis_title="Global Exposure (%)")
 
 fig1.update_layout(
     xaxis=dict(showgrid=True),
+    yaxis=dict(showgrid=True)
+)
+
+fig1.update_layout(
+    yaxis_title="Global Exposure (%)",
+    xaxis=dict(
+        categoryorder='array',
+        categoryarray=scenario_order,
+        showgrid=True
+    ),
     yaxis=dict(showgrid=True)
 )
 
@@ -140,16 +160,24 @@ st.caption("Percentage of land at risk per region across sea-level rise scenario
 
 land_df = df[df['Indicator'] == 'Land']
 
+region = land_df.groupby(['Continent','Scenario']).apply(
+    lambda x: x['Impact'].sum() / x['Total'].sum() * 100
+).reset_index(name='Percentage')
+
 fig2 = px.bar(
-    land_df,
+    region,
     x='Continent',
     y='Percentage',
     color='Scenario',
     barmode='group'
 )
 
-
 fig2.update_layout(yaxis_title="Land Exposed (%)")
+
+fig2.update_layout(
+    xaxis=dict(categoryorder='array', categoryarray=sorted(df['Continent'].unique())),
+    legend=dict(traceorder="normal")
+)
 
 st.plotly_chart(fig2, use_container_width=True)
 
@@ -323,11 +351,18 @@ overall = df.groupby('Indicator').apply(
 
 fig6 = go.Figure()
 
-fig6.add_trace(go.Scatterpolar(
-    r=list(overall['Percentage']) + [overall['Percentage'][0]],
-    theta=list(overall['Indicator']) + [overall['Indicator'][0]],
-    fill='toself'
-))
+for sc in scenario_order:
+    subset = df[df['Scenario'] == sc]
+    vals = subset.groupby('Indicator').apply(
+        lambda x: x['Impact'].sum() / x['Total'].sum() * 100
+    )
+
+    fig6.add_trace(go.Scatterpolar(
+        r=list(vals) + [vals.iloc[0]],
+        theta=list(vals.index) + [vals.index[0]],
+        fill='toself',
+        name=sc
+    ))
 
 fig6.update_layout(polar=dict(
         radialaxis=dict(
@@ -358,5 +393,12 @@ merged = merged.merge(t5, on='Country')
 merged.columns = ['Country','Land % at +1m','Land % at +3m','Land % at +5m']
 
 top15 = merged.sort_values('Land % at +5m', ascending=False).head(15)
+
+def risk(x):
+    if x > 10: return "High"
+    elif x > 5: return "Medium"
+    else: return "Low"
+
+top15['Risk Level'] = top15['Land % at +5m'].apply(risk)
 
 st.dataframe(top15, use_container_width=True)
