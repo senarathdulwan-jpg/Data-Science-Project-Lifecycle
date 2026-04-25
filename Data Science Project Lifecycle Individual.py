@@ -67,15 +67,10 @@ df['Scenario'] = pd.Categorical(
 # ─────────────────────────────
 # FILTERS
 # ─────────────────────────────
-col1, col2 = st.columns(2)
 
-with col1:
+with header_col2:
     scenario = st.selectbox("🌊 Select Scenario", scenario_order)
-
-with col2:
     indicator = st.selectbox("📊 Select Indicator", df['Indicator'].unique())
-
-filtered_df = df[df['Scenario'] == scenario]
 
 # ─────────────────────────────
 # KPI FUNCTION
