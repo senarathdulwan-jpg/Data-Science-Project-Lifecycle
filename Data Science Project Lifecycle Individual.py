@@ -290,16 +290,6 @@ fig.update_layout(
     legend=dict(orientation='h', y=-0.2)
 )
 
-fig.add_annotation(
-    text="Note: Dual axis used due to different units (Millions vs Billions)",
-    showarrow=False,
-    x=0.5,
-    y=-0.20,
-    xref="paper",
-    yref="paper",
-    xanchor="left",
-    align="left"
-)
 
 st.plotly_chart(fig, use_container_width=True)
 
