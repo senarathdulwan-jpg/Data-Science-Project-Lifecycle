@@ -147,7 +147,7 @@ fig2 = px.bar(
     color='Scenario',
     barmode='group'
 )
-fig2.update_traces(marker_line_width=0)
+fig2.update_traces(opacity=1)
 fig2.update_layout(yaxis_title="Land Exposed (%)")
 
 st.plotly_chart(fig2, use_container_width=True)
