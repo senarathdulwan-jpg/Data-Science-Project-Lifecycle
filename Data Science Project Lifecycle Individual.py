@@ -114,7 +114,8 @@ st.markdown("---")
 # ─────────────────────────────
 # GLOBAL TREND
 # ─────────────────────────────
-st.subheader("📈 Global Trend (% Impact)")
+st.caption("Global Percentage Impact by Scenario — All Indicators")
+st.subheader("How each indicator's exposure grows from +1m to +5m sea-level rise (% of global total)")
 
 trend = df.groupby(['Scenario','Indicator'])['Percentage'].mean().reset_index()
 
