@@ -193,11 +193,23 @@ pivot = heat_df.pivot_table(
     values='Percentage'
 )
 
-fig4 = px.imshow(pivot, text_auto=True, color_continuous_scale="RdYlBu_r")
+# reverse order for better readability
+pivot = pivot.sort_values(by=pivot.columns[-1], ascending=False)
+
+fig4 = px.imshow(
+    pivot,
+    text_auto=True,
+    aspect="auto",   # 🔥 KEY FIX (prevents squishing)
+    color_continuous_scale="RdYlBu_r"
+)
+
+# MAKE IT LARGE + HORIZONTAL
+fig4.update_layout(
+    height=600,   # bigger height
+    margin=dict(l=50, r=50, t=50, b=50)
+)
 
 st.plotly_chart(fig4, use_container_width=True)
-
-st.markdown("---")
 
 # ─────────────────────────────
 # POP vs GDP
