@@ -178,7 +178,8 @@ fig3.update_coloraxes(showscale=False)
 fig3.update_layout(xaxis_title="Exposure (%)",xaxis=dict(
         title="Exposure (%)",
         showgrid=True,
-        gridcolor="lightgray")
+        gridcolor="lightgray",
+        griddash="dot")
 )
 
 st.plotly_chart(fig3, use_container_width=True)
