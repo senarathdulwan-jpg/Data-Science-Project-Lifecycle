@@ -174,43 +174,44 @@ st.markdown("---")
 # ─────────────────────────────
 # HEATMAP (FIXED)
 # ─────────────────────────────
-st.subheader("🔥 Vulnerability Heatmap")
+st.subheader("🔥 Vulnerability Heatmap (Top 15 Across All Scenarios)")
 
 heat_df = df[df['Indicator'] == indicator]
 
+# ✅ Get top 15 countries based on MAX exposure across ALL scenarios
 top_countries = (
     heat_df.groupby('Country')['Percentage']
-    .max()
+    .max()                      # you can also use .mean() if needed
     .nlargest(15)
     .index
 )
 
+# Filter only those countries
 heat_df = heat_df[heat_df['Country'].isin(top_countries)]
 
+# Pivot table
 pivot = heat_df.pivot_table(
     index='Country',
     columns='Scenario',
     values='Percentage'
 )
 
-# reverse order for better readability
+# Sort by highest scenario (5 meter usually)
 pivot = pivot.sort_values(by=pivot.columns[-1], ascending=False)
 
-fig4 = px.imshow(
+# Plot
+fig = px.imshow(
     pivot,
     text_auto=True,
-    aspect="auto",   # 🔥 KEY FIX (prevents squishing)
+    aspect="auto",
     color_continuous_scale="RdYlBu_r"
 )
 
-# MAKE IT LARGE + HORIZONTAL
-fig4.update_layout(
-    height=600,   # bigger height
-    margin=dict(l=50, r=50, t=50, b=50)
+fig.update_layout(
+    height=600
 )
 
-st.plotly_chart(fig4, use_container_width=True)
-
+st.plotly_chart(fig, use_container_width=True)
 # ─────────────────────────────
 # POP vs GDP
 # ─────────────────────────────
