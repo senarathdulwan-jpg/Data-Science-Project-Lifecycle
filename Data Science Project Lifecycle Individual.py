@@ -71,11 +71,10 @@ df['Scenario'] = pd.Categorical(
 # FILTERS
 # ─────────────────────────────
 
-with st.sidebar:
-    st.markdown("## 🎛️ Filters")
+scenario = st.selectbox("🌊 Select Scenario", scenario_order)
+indicator = st.selectbox("📊 Select Indicator", df['Indicator'].unique())
 
-    scenario = st.selectbox("🌊 Select Scenario", scenario_order)
-    indicator = st.selectbox("📊 Select Indicator", df['Indicator'].unique())
+filtered_df = df[df['Scenario'] == scenario]
 
 
 # ─────────────────────────────
