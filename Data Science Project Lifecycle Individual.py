@@ -282,7 +282,9 @@ fig.update_layout(
         title="Population (Millions)",
         tickmode='linear',
         dtick=50,
-        showgrid=True
+        showgrid=True,
+        gridcolor="lightgray",
+
     ),
 
     # RIGHT AXIS (GDP)
