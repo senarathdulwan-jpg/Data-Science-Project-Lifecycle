@@ -294,7 +294,7 @@ fig.add_annotation(
     text="Note: Dual axis used due to different units (Millions vs Billions)",
     showarrow=False,
     x=0.5,
-    y=-0.35,,
+    y=-0.35,
     xref="paper",
     yref="paper",
     align="left"
