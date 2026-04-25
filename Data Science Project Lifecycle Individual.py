@@ -283,7 +283,11 @@ fig.add_trace(go.Scatter(
 fig.update_layout(
     height=500,
     template='plotly_white',
-    xaxis_title="Scenario",
+    xaxis=dict(
+    title="Scenario",
+    showgrid=True,
+    gridcolor="lightgray"
+),
     
     # LEFT AXIS (Population)
     yaxis=dict(
