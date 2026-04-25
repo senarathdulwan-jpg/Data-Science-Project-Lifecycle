@@ -35,7 +35,7 @@ st.markdown("""
 # ─────────────────────────────
 st.title("🌊 Sea-Level Rise Impact Dashboard")
 st.caption("Interactive analysis of global exposure across sea-level scenarios")
-st.markdown("---")
+st.markdown("<h2 style='text-align:center;'>🌊 Sea-Level Rise Impact Dashboard</h2>", unsafe_allow_html=True)
 
 # ─────────────────────────────
 # LOAD DATA
