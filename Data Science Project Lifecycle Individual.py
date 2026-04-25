@@ -297,6 +297,7 @@ fig.add_annotation(
     y=-0.20,
     xref="paper",
     yref="paper",
+    xanchor="left",
     align="left"
 )
 
