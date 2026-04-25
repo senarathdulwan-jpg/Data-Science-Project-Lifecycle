@@ -104,7 +104,7 @@ with c3:
     st.markdown(f"""
     <div class="kpi-card">
         <div class="kpi-title">💰 GDP Exposed</div>
-        <div class="kpi-value">${gdp/1000:.2f}B</div>
+        <div class="kpi-value">${gdp/1000:.1f}B</div>
         <div class="kpi-sub">{gdp_pct:.2f}% of global GDP</div>
     </div>
     """, unsafe_allow_html=True)
