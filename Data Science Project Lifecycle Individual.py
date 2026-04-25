@@ -249,7 +249,7 @@ fig = go.Figure()
 fig.add_trace(go.Scatter(
     x=scenario_order,
     y=pop_data.values / 1_000_000,  # convert to millions
-    mode='lines+markers',
+    mode='lines+markers+text',
     name='Population (Millions)',
     line=dict(width=3, color="royalblue"),
     marker=dict(size=8, color="royalblue"),
@@ -261,7 +261,7 @@ fig.add_trace(go.Scatter(
 fig.add_trace(go.Scatter(
     x=scenario_order,
     y=gdp_data.values / 1_000,  # convert to billions
-    mode='lines+markers',
+    mode='lines+markers+text',
     name='GDP (Billions)',
     yaxis='y2',
     line=dict(width=3, dash='dot',color="tomato"),
