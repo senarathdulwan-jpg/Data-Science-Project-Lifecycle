@@ -34,16 +34,14 @@ st.markdown("""
 # TITLE
 # ─────────────────────────────
 
-left, center, right = st.columns([1, 3, 1])
-
-with center:
-    st.title("🌊 Sea-Level Rise Impact Dashboard")
-    st.markdown(
-        "<p style='text-align:center; color:gray; font-size:14px;'>"
-        "Interactive analysis of global exposure across sea-level scenarios"
-        "</p>",
-        unsafe_allow_html=True
-    )
+st.markdown("""
+    <div style="text-align:center;">
+        <h1 style="margin-bottom:0;">🌊 Sea-Level Rise Impact Dashboard</h1>
+        <p style="color:gray; font-size:16px; margin-top:5px;">
+            Interactive analysis of global exposure across sea-level scenarios
+        </p>
+    </div>
+""", unsafe_allow_html=True)
 
 # ─────────────────────────────
 # LOAD DATA
