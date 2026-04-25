@@ -258,6 +258,14 @@ fig.add_trace(go.Scatter(
     textfont=dict(color="royalblue")
 ))
 
+for y in pop_data.values / 1_000_000:
+    fig.add_hline(
+        y=y,
+        line_width=1,
+        line_color="lightgray",
+        opacity=0.5
+    )
+
 # GDP line
 fig.add_trace(go.Scatter(
     x=scenario_order,
