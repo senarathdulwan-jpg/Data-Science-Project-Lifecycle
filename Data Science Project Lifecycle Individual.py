@@ -174,6 +174,7 @@ fig3 = px.bar(
     color='Percentage',
     color_continuous_scale='Viridis'
 )
+fig3.update_coloraxes(showscale=False)
 fig3.update_layout(xaxis_title="Exposure (%)")
 
 st.plotly_chart(fig3, use_container_width=True)
