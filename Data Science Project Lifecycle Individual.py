@@ -348,8 +348,8 @@ st.plotly_chart(fig, use_container_width=True)
 # ─────────────────────────────
 # RADAR
 # ─────────────────────────────
-st.subheader("🕸️ Radar (% Impact)")
-
+st.subheader("Global Exposure Comparison Across Indicators")
+st.caption("Relative percentage of total exposure for each indicator across sea-level rise scenarios (values shown in %)")
 
 # Calculate global exposure across ALL scenarios
 overall = df.groupby('Indicator').apply(
