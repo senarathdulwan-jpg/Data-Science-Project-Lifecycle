@@ -417,10 +417,6 @@ def risk(x):
 
 top15['Risk Level'] = top15['Land % at +5m'].apply(risk)
 
-# ─────────────────────────────
-# TABLE (COLORED RISK LEVEL)
-# ─────────────────────────────
-
 def risk_badge(val):
     if val == "High":
         return "🔴 High"
@@ -431,4 +427,5 @@ def risk_badge(val):
 
 top15["Risk Level"] = top15["Risk Level"].apply(risk_badge)
 
+top15 = top15.astype(str)
 st.dataframe(top15, use_container_width=True,hide_index=True)
