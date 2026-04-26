@@ -402,8 +402,14 @@ merged = merged.merge(t5, on='Country')
 
 merged.columns = ['Country','Land % at +1m','Land % at +3m','Land % at +5m']
 
-top15 = merged.sort_values('Land % at +5m', ascending=False).head(15)
+top15 = (
+    merged
+    .sort_values('Land % at +5m', ascending=False)
+    .head(15)
+    .reset_index(drop=True)
+)
 
+top15.insert(0, "Rank", top15.index + 1)
 def risk(x):
     if x > 10: return "High"
     elif x > 5: return "Medium"
