@@ -410,6 +410,8 @@ top15 = (
 )
 
 top15.insert(0, "Rank", top15.index + 1)
+
+top15["Rank"] = top15["Rank"].astype(str)
 def risk(x):
     if x > 10: return "High"
     elif x > 5: return "Medium"
