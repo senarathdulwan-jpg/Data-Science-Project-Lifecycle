@@ -414,7 +414,6 @@ top15['Risk Level'] = top15['Land % at +5m'].apply(risk)
 # ─────────────────────────────
 # TABLE (COLORED RISK LEVEL)
 # ─────────────────────────────
-
 def color_risk(val):
     if val == "High":
         return "background-color: #ff4d4d; color: white"
@@ -423,7 +422,7 @@ def color_risk(val):
     else:
         return "background-color: #2ecc71; color: white"
 
-styled_table = top15.style.applymap(
+styled_table = top15.style.map(
     color_risk,
     subset=["Risk Level"]
 )
