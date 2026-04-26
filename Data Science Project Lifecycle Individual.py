@@ -75,6 +75,7 @@ with left_panel:
 
     scenario = st.selectbox("🌊 Scenario", scenario_order)
     indicator = st.selectbox("📊 Indicator", sorted(df['Indicator'].unique()))
+filtered_df = df[df['Scenario'] == scenario]
 
 # ─────────────────────────────
 # KPI FUNCTION
