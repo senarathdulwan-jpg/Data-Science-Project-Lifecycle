@@ -269,7 +269,6 @@ st.markdown("---")
 st.subheader("Global Absolute Impact Growth — Population & GDP")
 st.caption("Cumulative increase in people and GDP value exposed as sea levels rise")
 
-import plotly.graph_objects as go
 
 
 pop_df = df[df['Indicator'] == 'Population']
