@@ -164,8 +164,8 @@ st.markdown("---")
 # ─────────────────────────────
 # CONTINENT BREAKDOWN
 # ─────────────────────────────
-st.subheader("🌍 Regional Land Exposure by Scenario(Land %)")
-st.caption("Percentage of land at risk per region across sea-level rise scenarios")
+st.subheader("Regional Land Exposure by Scenario")
+st.caption("Percentage of land at risk per region across different sea-level rise scenarios")
 
 land_df = df[df['Indicator'] == 'Land']
 
@@ -386,7 +386,8 @@ st.markdown("---")
 # ─────────────────────────────
 # TABLE
 # ─────────────────────────────
-st.subheader("📋 Top 15 Most Vulnerable Countries")
+st.subheader("📋 Top 15 Most Vulnerable Countries — Land Exposure")
+st.caption("Comparison of land exposure percentages at +1m, +3m, and +5m sea-level rise")
 
 land_df = df[df['Indicator'] == 'Land']
 
