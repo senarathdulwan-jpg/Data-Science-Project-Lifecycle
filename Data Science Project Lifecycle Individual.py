@@ -42,8 +42,6 @@ st.markdown("""
         </p>
     </div>
 """, unsafe_allow_html=True)
-left_panel, main_panel = st.columns([1, 4])
-st.write("")   
 
 
 # ─────────────────────────────
