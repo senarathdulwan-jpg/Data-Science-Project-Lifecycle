@@ -371,7 +371,7 @@ for sc in scenario_order:
         name=sc
     ))
 
-fig6.update_layout(polar=dict(
+fig6.update_layout(height=750,polar=dict(
         radialaxis=dict(
             title="Exposure (%)",
             range=[0, overall['Percentage'].max() * 1.2]  # 👈 keeps spacing clean
