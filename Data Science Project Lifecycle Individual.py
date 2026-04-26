@@ -246,7 +246,6 @@ pivot = heat_df.pivot_table(
     columns='Scenario',
     values='Percentage'
 )
-scenario_order = ['1 meter', '2 meter', '3 meter', '4 meter', '5 meter']
 pivot = pivot.reindex(columns=scenario_order)
 
 # Sort by highest scenario (5 meter usually)
@@ -275,7 +274,6 @@ st.caption("Cumulative increase in people and GDP value exposed as sea levels ri
 
 import plotly.graph_objects as go
 
-scenario_order = ['1 meter', '2 meter', '3 meter', '4 meter', '5 meter']
 
 pop_df = df[df['Indicator'] == 'Population']
 gdp_df = df[df['Indicator'] == 'Gdp']
