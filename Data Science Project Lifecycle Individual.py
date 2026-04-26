@@ -411,4 +411,21 @@ def risk(x):
 
 top15['Risk Level'] = top15['Land % at +5m'].apply(risk)
 
-st.dataframe(top15, use_container_width=True)
+# ─────────────────────────────
+# TABLE (COLORED RISK LEVEL)
+# ─────────────────────────────
+
+def color_risk(val):
+    if val == "High":
+        return "background-color: #ff4d4d; color: white"
+    elif val == "Medium":
+        return "background-color: #ffd11a; color: black"
+    else:
+        return "background-color: #2ecc71; color: white"
+
+styled_table = top15.style.applymap(
+    color_risk,
+    subset=["Risk Level"]
+)
+
+st.dataframe(styled_table, use_container_width=True)
