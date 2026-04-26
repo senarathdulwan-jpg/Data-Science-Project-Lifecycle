@@ -52,12 +52,15 @@ st.markdown("""
 
 df = pd.read_excel("Data Science Project Lifecycle.xlsx")
 
+# Clean inconsistent formatting from dataset (spaces, casing issues)
 df.columns = df.columns.str.strip()
 
+# Normalize text values for consistent grouping in charts
 df['Indicator'] = df['Indicator'].str.strip().str.title()
 df['Scenario'] = df['Scenario'].str.strip().str.lower()
 df['Continent'] = df['Continent'].str.strip()
 
+# Enforce logical scenario progression for plotting (1m → 5m)
 scenario_order = ['1 meter','2 meter','3 meter','4 meter','5 meter']
 
 df['Scenario'] = pd.Categorical(
@@ -82,6 +85,7 @@ filtered_df = df[df['Scenario'] == scenario]
 # KPI FUNCTION
 #------------------------------
 
+# KPI = (impact vs total exposure) for a given indicator
 def get_kpi(df_subset, name):
     data = df_subset[df_subset['Indicator'] == name]
     impact = data['Impact'].sum()
@@ -345,6 +349,9 @@ st.markdown("---")
 # RADAR
 #------------------------------
 
+# Radar chart comparing relative exposure distribution across indicators
+# Each polygon represents a sea-level scenario
+
 st.subheader("Global Exposure Comparison Across Indicators")
 st.caption("Relative percentage of total exposure for each indicator across sea-level rise scenarios (values shown in %)")
 
@@ -382,6 +389,7 @@ st.markdown("---")
 # SUMMARY TABLE
 #------------------------------
 
+# Merge scenario data into a single comparison table for top affected countries
 st.subheader("📋 Top 15 Most Vulnerable Countries — Land Exposure")
 st.caption("Comparison of land exposure percentages at +1m, +3m, and +5m sea-level rise")
 
