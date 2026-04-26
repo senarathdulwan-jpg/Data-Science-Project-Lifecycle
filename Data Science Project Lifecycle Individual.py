@@ -374,7 +374,7 @@ for sc in scenario_order:
 fig6.update_layout(height=600,polar=dict(
         radialaxis=dict(
             title="Exposure (%)",
-            range=[0, overall['Percentage'].max() * 1.2]  # 👈 keeps spacing clean
+            range=[0, 20]  # 👈 keeps spacing clean
         )
     )
 )
