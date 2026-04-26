@@ -362,7 +362,7 @@ for sc in scenario_order:
     fig6.add_trace(go.Scatterpolar(
         r=list(vals) + [vals.iloc[0]],
         theta=list(vals.index) + [vals.index[0]],
-        fill='toself',
+        fill='none',
         name=sc
     ))
 
