@@ -140,12 +140,6 @@ trend = df.groupby(['Scenario','Indicator']).apply(
 
 fig1 = px.line(trend, x='Scenario', y='Percentage', color='Indicator', markers=True)
 
-fig1.update_layout(yaxis_title="Global Exposure (%)")
-
-fig1.update_layout(
-    xaxis=dict(showgrid=True),
-    yaxis=dict(showgrid=True)
-)
 
 fig1.update_layout(
     yaxis_title="Global Exposure (%)",
