@@ -42,7 +42,6 @@ st.markdown("""
         </p>
     </div>
 """, unsafe_allow_html=True)
-left_panel, main_panel = st.columns([1, 4])
 
 
 # ─────────────────────────────
@@ -70,11 +69,12 @@ df['Scenario'] = pd.Categorical(
 # FILTERS
 # ─────────────────────────────
 
-with left_panel:
-    st.subheader("Filters")
-
+with st.sidebar:
+    st.markdown("### 🎛️ Controls")
+    
     scenario = st.selectbox("🌊 Scenario", scenario_order)
     indicator = st.selectbox("📊 Indicator", sorted(df['Indicator'].unique()))
+
 filtered_df = df[df['Scenario'] == scenario]
 
 # ─────────────────────────────
@@ -96,7 +96,6 @@ gdp, gdp_pct = get_kpi(filtered_df, "Gdp")
 # KPI CARDS (PREMIUM STYLE)
 # ─────────────────────────────
     
-with main_panel:
       
     c1, c2, c3 = st.columns(3)
     
