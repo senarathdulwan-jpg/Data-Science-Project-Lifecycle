@@ -427,5 +427,4 @@ def risk_badge(val):
 
 top15["Risk Level"] = top15["Risk Level"].apply(risk_badge)
 
-top15 = top15.astype(str)
 st.dataframe(top15, use_container_width=True,hide_index=True)
