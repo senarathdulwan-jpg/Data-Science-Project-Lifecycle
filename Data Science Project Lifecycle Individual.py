@@ -3,14 +3,16 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-# ─────────────────────────────
-# PAGE CONFIG
-# ─────────────────────────────
+#----------------------------
+# PAGE CONFIG.
+#----------------------------
+
 st.set_page_config(page_title="Sea Level Dashboard", layout="wide")
 
-# ─────────────────────────────
-# CUSTOM CSS (PREMIUM LOOK)
-# ─────────────────────────────
+#---------------------------
+# CUSTOM CSS 
+#---------------------------
+
 st.markdown("""
 <style>
 .main {background-color: #f5f7fa;}
@@ -30,9 +32,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ─────────────────────────────
+#---------------------------
 # TITLE
-# ─────────────────────────────
+#---------------------------
 
 st.markdown("""
     <div style="text-align:center;">
@@ -44,15 +46,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ─────────────────────────────
+#--------------------------
 # LOAD DATA
-# ─────────────────────────────
+#--------------------------
+
 df = pd.read_excel("Data Science Project Lifecycle.xlsx")
 
-# CLEAN COLUMN NAMES (CRITICAL FIX)
 df.columns = df.columns.str.strip()
 
-# CLEAN VALUES
 df['Indicator'] = df['Indicator'].str.strip().str.title()
 df['Scenario'] = df['Scenario'].str.strip().str.lower()
 df['Continent'] = df['Continent'].str.strip()
@@ -65,9 +66,9 @@ df['Scenario'] = pd.Categorical(
     ordered=True
 )
 
-# ─────────────────────────────
+#------------------------------
 # FILTERS
-# ─────────────────────────────
+#------------------------------
 
 with st.sidebar:
     st.markdown("### 🎛️ Controls")
@@ -77,9 +78,9 @@ with st.sidebar:
 
 filtered_df = df[df['Scenario'] == scenario]
 
-# ─────────────────────────────
+#------------------------------
 # KPI FUNCTION
-# ─────────────────────────────
+#------------------------------
 
 def get_kpi(df_subset, name):
     data = df_subset[df_subset['Indicator'] == name]
@@ -92,9 +93,9 @@ land, land_pct = get_kpi(filtered_df, "Land")
 pop, pop_pct = get_kpi(filtered_df, "Population")
 gdp, gdp_pct = get_kpi(filtered_df, "Gdp")
 
-# ─────────────────────────────
-# KPI CARDS (PREMIUM STYLE)
-# ─────────────────────────────
+#------------------------------
+# KPI CARDS 
+#------------------------------
     
       
 c1, c2, c3 = st.columns(3)
@@ -128,9 +129,10 @@ with c3:
 
 st.markdown("---")
 
-# ─────────────────────────────
-# GLOBAL TREND
-# ─────────────────────────────
+#-------------------------------------------
+# GLOBAL PERECNTAGE IMPACE BY SCENARIO CHART
+#-------------------------------------------
+
 st.subheader("Global Percentage Impact by Scenario — All Indicators")
 st.caption("How each indicator's exposure grows from +1m to +5m sea-level rise (% of global total)")
 
@@ -155,9 +157,10 @@ st.plotly_chart(fig1, use_container_width=True)
 
 st.markdown("---")
 
-# ─────────────────────────────
-# CONTINENT BREAKDOWN
-# ─────────────────────────────
+#-----------------------------------------
+# REGINOAL LAND EXPOSURE BY SCENARIO CHART
+#-----------------------------------------
+
 st.subheader("Regional Land Exposure by Scenario")
 st.caption("Percentage of land at risk per region across different sea-level rise scenarios")
 
@@ -186,9 +189,10 @@ st.plotly_chart(fig2, use_container_width=True)
 
 st.markdown("---")
 
-# ─────────────────────────────
-# TOP COUNTRIES (DYNAMIC)
-# ─────────────────────────────
+#-----------------------------------------
+# COUNTRY-LEVEL VULNERBILITY RANKING CHART
+#-----------------------------------------
+
 st.subheader("Country-Level Vulnerability Ranking")
 st.caption("Top 15 countries ranked by percentage of impact for the selected indicator and sea-level rise scenario")
 
@@ -196,6 +200,7 @@ top_df = df[
     (df['Scenario'] == scenario) &
     (df['Indicator'] == indicator)
 ].nlargest(15, 'Percentage')
+
 
 fig3 = px.bar(
     top_df.sort_values('Percentage'),
@@ -205,7 +210,9 @@ fig3 = px.bar(
     color='Percentage',
     color_continuous_scale='Viridis'
 )
+
 fig3.update_coloraxes(showscale=False)
+
 fig3.update_layout(xaxis_title="Exposure (%)",xaxis=dict(
         title="Exposure (%)",
         showgrid=True,
@@ -217,15 +224,15 @@ st.plotly_chart(fig3, use_container_width=True)
 
 st.markdown("---")
 
-# ─────────────────────────────
-# HEATMAP (FIXED)
-# ─────────────────────────────
+#------------------------------
+# HEATMAP 
+#------------------------------
+
 st.subheader("Top Country Vulnerability Heatmap")
 st.caption("Top 15 most affected countries showing exposure variations across sea-level rise scenarios (1–5m) for the selected indicator")
 
 heat_df = df[df['Indicator'] == indicator]
 
-# ✅ Get top 15 countries based on MAX exposure across ALL scenarios
 top_countries = (
     heat_df.groupby('Country')['Percentage']
     .max()                
@@ -233,10 +240,8 @@ top_countries = (
     .index
 )
 
-# Filter only those countries
 heat_df = heat_df[heat_df['Country'].isin(top_countries)]
 
-# Pivot table
 pivot = heat_df.pivot_table(
     index='Country',
     columns='Scenario',
@@ -244,10 +249,8 @@ pivot = heat_df.pivot_table(
 )
 pivot = pivot.reindex(columns=scenario_order)
 
-# Sort by highest scenario (5 meter usually)
 pivot = pivot.sort_values(by=pivot.columns[-1], ascending=False)
 
-# Plot
 fig = px.imshow(
     pivot,
     text_auto=True,
@@ -263,13 +266,13 @@ fig.update_layout(
 
 st.plotly_chart(fig, use_container_width=True)
 st.markdown("---")
-# ─────────────────────────────
-# POP and GPD
-# ─────────────────────────────
+
+#------------------------------
+# POPULATION AND GDP CHART
+#------------------------------
+
 st.subheader("Global Absolute Impact Growth — Population & GDP")
 st.caption("Cumulative increase in people and GDP value exposed as sea levels rise")
-
-
 
 pop_df = df[df['Indicator'] == 'Population']
 gdp_df = df[df['Indicator'] == 'Gdp']
@@ -279,7 +282,6 @@ gdp_data = gdp_df.groupby('Scenario')['Impact'].sum().reindex(scenario_order)
 
 fig = go.Figure()
 
-# Population line
 fig.add_trace(go.Scatter(
     x=scenario_order,
     y=pop_data.values / 1_000_000,  # convert to millions
@@ -292,7 +294,6 @@ fig.add_trace(go.Scatter(
     textfont=dict(color="royalblue")
 ))
 
-# GDP line
 fig.add_trace(go.Scatter(
     x=scenario_order,
     y=gdp_data.values / 1_000,  # convert to billions
@@ -315,7 +316,7 @@ fig.update_layout(
     gridcolor="lightgray"
 ),
     
-    # LEFT AXIS (Population)
+    
     yaxis=dict(
         title="Population (Millions)",
         tickmode='linear',
@@ -325,7 +326,7 @@ fig.update_layout(
 
     ),
 
-    # RIGHT AXIS (GDP)
+    
     yaxis2=dict(
         title="GDP (Billions)",
         overlaying='y',
@@ -340,13 +341,13 @@ fig.update_layout(
 st.plotly_chart(fig, use_container_width=True)
 st.markdown("---")
 
-# ─────────────────────────────
+#------------------------------
 # RADAR
-# ─────────────────────────────
+#------------------------------
+
 st.subheader("Global Exposure Comparison Across Indicators")
 st.caption("Relative percentage of total exposure for each indicator across sea-level rise scenarios (values shown in %)")
 
-# Calculate global exposure across ALL scenarios
 overall = df.groupby('Indicator').apply(
     lambda x: x['Impact'].sum() / x['Total'].sum() * 100
 ).reset_index(name='Percentage')
@@ -375,12 +376,12 @@ fig6.update_layout(height=600,polar=dict(
 )
 
 st.plotly_chart(fig6, use_container_width=True)
-
 st.markdown("---")
 
-# ─────────────────────────────
-# TABLE
-# ─────────────────────────────
+#------------------------------
+# SUMMARY TABLE
+#------------------------------
+
 st.subheader("📋 Top 15 Most Vulnerable Countries — Land Exposure")
 st.caption("Comparison of land exposure percentages at +1m, +3m, and +5m sea-level rise")
 
